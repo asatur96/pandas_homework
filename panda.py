@@ -49,7 +49,7 @@ def car_brands_graph(frame):
     matplotlib.pyplot.plot(grafframe['vyrobni_znacka_motoroveho_vozidla'], grafframe['percent'])
     matplotlib.pyplot.savefig('graph.png')
 
-def proces_data():
+def process_data():
     list_of_frames = []
     for key in explanations.file_names:
         df = pd.read_csv('data/' + key, encoding='iso-8859-2', sep=';', header=None)
@@ -65,4 +65,4 @@ def proces_data():
     car_brands_graph(frame)
 
 if __name__ == '__main__':
-    proces_data()
+    process_data()
