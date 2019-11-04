@@ -2,6 +2,10 @@ import pandas as pd
 import explanations
 import matplotlib.pyplot
 
+def clean_data(frame):
+    frame.dropna(axis=1, how='all', thresh=None, subset=None, inplace=True)
+    export_csv = frame.to_csv('clean_data.csv')
+
 #první úkol
 def accident_count(frame):
     ac = len(frame.index)
@@ -49,14 +53,18 @@ def car_brands_graph(frame):
     matplotlib.pyplot.plot(grafframe['vyrobni_znacka_motoroveho_vozidla'], grafframe['percent'])
     matplotlib.pyplot.savefig('graph.png')
 
-def process_data():
+def proces_data():
     list_of_frames = []
     for key in explanations.file_names:
         df = pd.read_csv('data/' + key, encoding='iso-8859-2', sep=';', header=None)
+        print(explanations.file_names[key])
+        df.columns = explanations.main_columns
+        df['kraj'] = explanations.file_names[key]
         list_of_frames.append(df)
 
     frame = pd.concat(list_of_frames, axis=0, ignore_index=True)
-    frame.columns = explanations.main_columns
+
+    clean_data(frame)
 
     ac = accident_count(frame)
     fatal_accident_percent(frame, ac)
@@ -65,4 +73,4 @@ def process_data():
     car_brands_graph(frame)
 
 if __name__ == '__main__':
-    process_data()
+    proces_data()
