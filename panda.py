@@ -35,9 +35,11 @@ def tram_fatal_station(frame):
     
 #pátý úkol
 def car_brands_graph(frame):
+    x_list = []
+    y_list = []
+
     brands_unique = frame['vyrobni_znacka_motoroveho_vozidla'].unique()
     count = 0
-    grafframe = pd.DataFrame(columns = ['vyrobni_znacka_motoroveho_vozidla', 'percent'])
     for brand in brands_unique:
         if brand == 0:
             continue
@@ -46,18 +48,22 @@ def car_brands_graph(frame):
             zatacka = len(frame[(frame['vyrobni_znacka_motoroveho_vozidla'] == brand) & (frame['smerove_pomery'] == 3)])
             brand_name = explanations.decode_key['vyrobni_znacka_motoroveho_vozidla'][brand]
             percent = (zatacka / size) * 100
-            grafframe.loc[count] = [brand_name, percent]
+            x_list.append(brand_name)
+            y_list.append(percent)
             count += 1
     x = list(range(count))
-    matplotlib.pyplot.xticks(x, grafframe['vyrobni_znacka_motoroveho_vozidla'], rotation='vertical')
-    matplotlib.pyplot.plot(grafframe['vyrobni_znacka_motoroveho_vozidla'], grafframe['percent'])
+
+    matplotlib.pyplot.scatter(x_list, y_list, s=10)
+    matplotlib.pyplot.xticks(x, x_list, rotation='vertical')
+    matplotlib.pyplot.xlabel("Brand")
+    matplotlib.pyplot.ylabel("Percent")
     matplotlib.pyplot.savefig('graph.png')
+
 
 def proces_data():
     list_of_frames = []
     for key in explanations.file_names:
         df = pd.read_csv('data/' + key, encoding='iso-8859-2', sep=';', header=None)
-        print(explanations.file_names[key])
         df.columns = explanations.main_columns
         df['kraj'] = explanations.file_names[key]
         list_of_frames.append(df)
